@@ -1,10 +1,38 @@
 const webpack = require('webpack');
 
+// if using any plugins for either dev and production
+var plugins = []; 
+
+// if using any plugins for development
+var devPlugins = [
+  new webpack.HotModuleReplacementPlugin() // used along w/ react-hotloader
+]; 
+
+// if using any plugins for production
+// w/ Webpack 4, don't need to specify minimize/uglifyJs
+var prodPlugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': JSON.stringify('production')
+    }
+  }),
+];
+
+plugins = plugins.concat(
+  process.env.NODE_ENV === 'production' ? prodPlugins : devPlugins
+);
+
+
 module.exports = {
   entry: [
     'react-hot-loader/patch',
     './src/index.js'
   ],
+  output: {
+    path: __dirname + '/dist',
+    publicPath: '/',
+    filename: 'bundle.js'
+  },
   module: {
     rules: [
       {
@@ -17,15 +45,10 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx']
   },
-  output: {
-    path: __dirname + '/dist',
-    publicPath: '/',
-    filename: 'bundle.js'
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
+  plugins: plugins,
+  devtool: "source-map",
   devServer: {
+    historyApiFallback: true,
     contentBase: './dist',
     hot: true
   }

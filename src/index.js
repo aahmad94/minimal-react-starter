@@ -7,5 +7,9 @@ ReactDOM.render(
   <div>{title}</div>,
   document.getElementById('app')
 );
+ReactDOM.render(
+  <div>"hello there"</div>,
+  document.getElementById('app')
+);
 
-module.hot.accept();
+module.hot.accept(); 
